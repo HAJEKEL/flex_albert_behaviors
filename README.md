@@ -12,33 +12,31 @@ to install FlexBE run the following commands:
 
 clone the FlexBE repositories
 ```
-cd ~/catkin_ws/src  # or an alternative workspace source path
+cd ~/catkin_ws/src # or alternative workspace name, same folder as cor_mdp_ahold
 git clone https://github.com/team-vigir/flexbe_behavior_engine.git
 git clone https://github.com/FlexBE/flexbe_app.git
 ```
 
-build FlexBE
+clone the FlexBE repository from git containing our states and behaviors (still inside src folder). 
 
 ```
-cd ~/catkin_ws # or the alternative workspace source path you chose
+git clone git@gitlab.tudelft.nl:cor/ro47007/2023/team-20/albert_flexbe.git 
+```
+
+build FlexBE and the Albert simulation
+
+```
+cd ~/catkin_ws 
 catkin build
 source devel/setup.bash
 ```
 
 **2. Launch the simulation in Gazebo and launch the retail_store_skills.** the action servers used in the FlexBE states are contained retail_store_skills and this folder will first need to be run before the FlexBE behavior can be launched.
 
-build the simulation repository
-```
-cd ~/catkin_ws
-catkin build
-source devel/setup.bash
-```
-
 launch the simulation
 ```
 roslaunch albert_gazebo albert_gazebo_navigation.launch
 ```
-
 launch the action servers 
 ```
 roslaunch retail_store_skills load_skills.launch
