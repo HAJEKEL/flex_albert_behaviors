@@ -1,8 +1,14 @@
-**This folder contains our FlexBE states and behavior.** FlexBE is used for a Finite State Machine to model complex robot behavior. The FSM in FlexBE is called a "behavior" and consists of seperate states which we made. For an overview of what the FSM looks like, see the overview.png picture.
+# FlexBE Behavior and States
+
+**This folder contains our FlexBE states and behavior.** FlexBE is used for a Finite State Machine to model complex robot behavior. The FSM in FlexBE is called a "behavior" and consists of seperate states which we made.
+
+
+![The FSM behavior](overview.png)
 
 To use the behavior we made for the Albert robot in FlexBE, FlexBE needs to be installed and our corresponding Behavior and States need to be downloaded. This process is explained in the cor_mdp_ahold repository readme.
 
-**The instructions for our behavior model in FlexBE are as follows:**
+
+## Running
 
 **IMPORTANT: first follow the README instructions in the cor_mdp_ahold repository. in the cor_mdp_ahold readme are instructions for installing flexBE and the simulation**
 
