@@ -23,13 +23,21 @@ class OrderMasterState(EventState):
         super(OrderMasterState, self).__init__(outcomes=['userdatachanged'],
                                                input_keys=['waypoint', 'apriltag_id', 'ordercomplete', 'request_type'])
 
-        self._sub = rospy.Subscriber('/order_node/current_order', OrderGoal, self.callback)
+        # subscribe to current order topic
         rospy.wait_for_service('/order_node/mark_completed')
         self._markcompleted_srv = rospy.ServiceProxy('/order_node/mark_completed', Trigger)
         self._userdatachanged = False
         self._failed = False
 
     def execute(self, userdata):
+
+        # get current order list from topic
+        order_list = rospy.wait_for_message('/order_node/current_order', OrderRequest)
+        userdata.waypoint = order_list.waypoint
+        userdata.apriltag_id = order_list.apriltag_ids[0]
+        userdata.request_type = order_list.request_type
+
+
 
         # get complete order list from somewhere
         self._markcompleted_srv(Trigger)
@@ -50,19 +58,5 @@ class OrderMasterState(EventState):
         self._userdatachanged = False
         self._failed = False
 
-    # def cancel_active_goals(self):
-    #	if self._client.is_available(self._action_topic):
-    #		if self._client.is_active(self._action_topic):
-    #			if not self._client.has_result(self._action_topic):
-    #				self._client.cancel(self._action_topic)
-    #				Logger.loginfo('Cancelled move_base active action goal.')
 
-    # def on_exit(self, userdata):
-    # self.cancel_active_goals()
 
-    # def on_stop(self):
-    # self.cancel_active_goals()
-    def callback(self, data):
-        userdata.waypoint = data.waypoint
-        userdata.apriltag_id = data.april_tags[0]
-        userdata.request_type = data.request_type
