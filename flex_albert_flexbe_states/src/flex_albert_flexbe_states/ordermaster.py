@@ -8,7 +8,8 @@ from flexbe_core.proxy import ProxyActionClient
 from actionlib_msgs.msg import GoalStatus
 from voice_requests.msg import CustomerInteractionAction, CustomerInteractionGoal
 from order_package.srv import AddTask
-from order_package.msg import OrderRequest
+from order_package.msg import OrderGoal, OrderRequest
+from std_srvs.srv import Trigger, TriggerResponse
 
 
 # get current order from topic, change into userdata
@@ -24,13 +25,14 @@ class OrderMasterState(EventState):
 
         self._sub = rospy.Subscriber('/order_node/current_order', OrderGoal, self.callback)
         rospy.wait_for_service('/order_node/mark_completed')
-        self._markcompleted_srv = rospy.ServiceProxy('/order_node/mark_completed', Trigger, self.handle_mark_completed)
+        self._markcompleted_srv = rospy.ServiceProxy('/order_node/mark_completed', Trigger)
         self._userdatachanged = False
         self._failed = False
 
     def execute(self, userdata):
 
         # get complete order list from somewhere
+        self._markcompleted_srv(Trigger)
 
         if userdata.ordercomplete == 1:  # order_complete is 1 if it is coming from place state
             # remove current order id from order list total, send that it is complete
@@ -60,11 +62,7 @@ class OrderMasterState(EventState):
 
     # def on_stop(self):
     # self.cancel_active_goals()
-    def self.
-
-    callback(self, data):
-
-
-userdata.waypoint = data.waypoint
-userdata.apriltag_id = data.april_tags[0]
-userdata.request_type = data.request_type
+    def callback(self, data):
+        userdata.waypoint = data.waypoint
+        userdata.apriltag_id = data.april_tags[0]
+        userdata.request_type = data.request_type
