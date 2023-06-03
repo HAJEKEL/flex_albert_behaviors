@@ -3,10 +3,11 @@ import actionlib
 import rospy
 from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyActionClient
+from order_package.msg import OrderGoal
 
 from actionlib_msgs.msg import GoalStatus
 from move_base_msgs.msg import *
-from geometry_msgs.msg import Pose, Point, Quaternion, Pose2D
+from geometry_msgs.msg import Pose, Quaternion
 from tf import transformations
 import tf_conversions
 """
@@ -37,7 +38,7 @@ class MoveBaseState2(EventState):
 		"""Constructor"""
 
 		super(MoveBaseState2, self).__init__(outcomes=['arrived', 'failed'],
-		                                     input_keys=['x', 'y','yaw'])
+		                                     input_keys=['waypoint'])
 
 		self._action_topic = "/move_base"
 
@@ -72,20 +73,12 @@ class MoveBaseState2(EventState):
 
 		goal = MoveBaseGoal()
 
-		x = userdata.x
-		y = userdata.y
-
-		yaw = userdata.yaw
-		pt = Point(x=x, y=y)
-		qt = transformations.quaternion_from_euler(0, 0, 0)
-
-		# goal.target_pose.pose = Pose(position = pt, orientation = Quaternion(*qt))
-		goal.target_pose.pose = Pose(position=pt, orientation=get_quaternion_from_yaw(yaw))
 		goal.target_pose.header.frame_id = "map"
-		# goal.target_pose.header.stamp.secs = 5.0
+        goal.target_pose.pose = userdata.waypoint
+
 
 		# Send the action goal for execution
-		try:
+        try:
 			self._client.send_goal(self._action_topic, goal)
 		except Exception as e:
 			Logger.logwarn("Unable to send navigation action goal:\n%s" % str(e))
