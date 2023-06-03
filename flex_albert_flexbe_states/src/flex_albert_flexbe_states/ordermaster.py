@@ -31,16 +31,17 @@ class OrderMasterState(EventState):
 
     def execute(self, userdata):
 
-        # get current order list from topic
-        order_list = rospy.wait_for_message('/order_node/current_order', OrderRequest)
-        userdata.waypoint = order_list.waypoint
-        userdata.apriltag_id = order_list.apriltag_ids[0]
-        userdata.request_type = order_list.request_type
-
-
-
         # get complete order list from somewhere
         self._markcompleted_srv(Trigger)
+
+        # get current order list from topic
+        current_order = rospy.wait_for_message('/order_node/current_order', OrderRequest)
+        userdata.waypoint = current_order.waypoint
+        userdata.apriltag_id = current_order.apriltag_ids[0]
+        userdata.request_type = current_order.request_type
+
+
+
 
         if userdata.ordercomplete == 1:  # order_complete is 1 if it is coming from place state
             # remove current order id from order list total, send that it is complete
@@ -57,6 +58,10 @@ class OrderMasterState(EventState):
 
         self._userdatachanged = False
         self._failed = False
+
+    def update_user_data(self, userdata):
+
+    # on completion, update the user data
 
 
 
