@@ -48,7 +48,7 @@ class PickProductState(EventState):
         # 		Logger.logwarn('failed to scan: %s' % str(status))
         # 		self._failed = True
         # 		return 'failed'
-        if self.client.get_state() == actionlib.GoalStatus.SUCCEEDED:
+        if self._client.get_state(self._action_topic) == actionlib.GoalStatus.SUCCEEDED:
             rospy.loginfo("Picking finished")
             self._picked = True
             return 'picked'
